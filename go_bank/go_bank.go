@@ -1,11 +1,34 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"strconv"
+)
+
+func getFloat64UserInput(label string) (input float64) {
+	fmt.Print(label)
+	fmt.Scan(&input)
+	return input
+}
+
+const balanceFileName = "balance.txt"
+
+func writeBalanceToFile(balance float64) {
+	balanceText := fmt.Sprint(balance)
+	os.WriteFile(balanceFileName, []byte(balanceText), 0644)
+}
+
+func readBalanceFromFile() float64 {
+	data, _ := os.ReadFile(balanceFileName)
+	balance, _ := strconv.ParseFloat(string(data), 64)
+	return balance
+}
 
 func main() {
-	accountBalance := 1000.0
+	accountBalance := readBalanceFromFile()
 	fmt.Println("Welcome to Go Bank!")
-
+	readBalanceFromFile()
 	for {
 		fmt.Println("What do you want to do?")
 		fmt.Println("1. Check balance")
@@ -55,6 +78,7 @@ func main() {
 				continue
 			}
 			accountBalance += deposiAmount
+			writeBalanceToFile(accountBalance)
 			fmt.Printf("Updated account balance is %.2f\n\n", accountBalance)
 		case 3:
 			withdrawlAmount := getFloat64UserInput("Enter withdrawl amount:")
@@ -66,16 +90,12 @@ func main() {
 				continue
 			}
 			accountBalance -= withdrawlAmount
+			writeBalanceToFile(accountBalance)
 			fmt.Printf("Updated account balance is %.2f\n\n", accountBalance)
 		case 4:
 			fmt.Println("Thanks for choosing Go bank!")
 			return
+		}
 
 	}
-}
-
-func getFloat64UserInput(label string) (input float64) {
-	fmt.Print(label)
-	fmt.Scan(&input)
-	return input
 }
