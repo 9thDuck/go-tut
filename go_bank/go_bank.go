@@ -69,7 +69,7 @@ func main() {
 			fmt.Printf("Updated account balance is %.2f\n\n", accountBalance)
 		case 4:
 			fmt.Println("Thanks for choosing Go bank!")
-		}
+			return
 
 	}
 }
