@@ -8,7 +8,7 @@ import (
 func main() {
 	const inflationRate = 6.5
 	var investmentAmount, years float64
-	expectedReturnRate := 5.5
+	var expectedReturnRate float64
 
 	getInputData(`Enter investment amount: `, &investmentAmount)
 
