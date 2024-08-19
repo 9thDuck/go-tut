@@ -34,3 +34,20 @@ func (u *User) ResetUserData() {
 	u.lastName = ""
 	u.birthDate = ""
 }
+
+// admin
+type Admin struct {
+	email    string
+	password string
+	User
+}
+
+func NewAdmin(email string, password string, user *User) (*Admin, error) {
+	if email == "" || password == "" {
+		return nil, errors.New("email and password are required")
+	}
+
+	return &Admin{
+		email: email, password: password, User: *user,
+	}, nil
+}

@@ -19,9 +19,20 @@ func main() {
 		panic(err)
 	}
 
+	admin, err := user.NewAdmin("careofspace@gmail.com", "asdfasdf", userData)
+
+	if err != nil {
+		panic(err)
+	}
+
 	userData.OutputUserDetails()
 	userData.ResetUserData()
 	userData.OutputUserDetails()
+
+	admin.OutputUserDetails()
+	admin.ResetUserData()
+	admin.OutputUserDetails()
+
 }
 
 func getUserInputData(label string) (userInput string) {
