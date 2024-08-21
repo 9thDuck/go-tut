@@ -4,7 +4,23 @@ import (
 	"fmt"
 
 	"example.com/notes/note"
+	"example.com/notes/todo"
 )
+
+type saver interface {
+	Save() error
+}
+
+func saveData(data saver) error {
+	err := data.Save()
+	if err != nil {
+		fmt.Println("Saving the note failed")
+		return err
+	}
+
+	fmt.Println("Saving the note succeeded!")
+	return nil
+}
 
 func main() {
 	note, err := note.CreateNote()
@@ -16,12 +32,20 @@ func main() {
 
 	note.Display()
 
-	err = note.Save()
+	err = saveData(note)
 
 	if err != nil {
-		fmt.Println("Saving the note failed")
 		return
 	}
 
-	fmt.Println("Saving the note succeeded!")
+	todo, err := todo.CreateTodo()
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	todo.Display()
+
+	saveData(todo)
 }
