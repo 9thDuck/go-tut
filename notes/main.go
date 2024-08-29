@@ -40,7 +40,35 @@ func saveData(data saver) error {
 	return nil
 }
 
+func printSomethingSwitch (value interface {}) {
+	switch value.(type) {
+	case int:
+		fmt.Println("Integer:", value)
+	case float64:
+		fmt.Println("Float:", value)
+	case string:
+		fmt.Println(value)
+	}
+}
+
+func printIntStr (value interface{}) {
+	intVal, ok := value.(int)
+
+	if ok {
+		fmt.Println("int value", intVal)
+	} 
+
+	strVal, ok := value.(string)
+
+	if ok {
+		fmt.Println("str value", strVal)
+	}
+
+}
+
 func main() {
+
+	//Note 
 	note, err := note.CreateNote()
 
 	if err != nil {
@@ -54,6 +82,7 @@ func main() {
 		return
 	}
 
+	//Todo
 	todo, err := todo.CreateTodo()
 
 	if err != nil {
@@ -66,4 +95,14 @@ func main() {
 	if(err != nil) {
 		fmt.Println(err)
 	}
+
+	// type checking using switch
+	printSomethingSwitch(1)
+	printSomethingSwitch('s') //ignored
+	printSomethingSwitch("asdf")
+	printSomethingSwitch(`asdf`)
+
+	printIntStr(2)
+	printIntStr("s")
+	printIntStr('s') //ignored
 }
