@@ -55,14 +55,22 @@ func main () {
 	// // Creates new array behind the scenes, appends to it 1 and return it. 
 	// newPrices := append(prices, 1)
 	// fmt.Println(newPrices, prices)
-	newProduct, err := (makeProduct("asdf", "asdf", []string{"asdf"}))
+	// newProduct, err := (makeProduct("asdf", "asdf", []string{"asdf"}))
 
-	if err != nil {
-		panic(err)
-	}
-	newProductVal := *newProduct
-	newProductVal.tags = append(newProductVal.tags, "jkl;")
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// newProductVal := *newProduct
+	// newProductVal.tags = append(newProductVal.tags, "jkl;")
 
-	fmt.Println(newProductVal)
+	// fmt.Println(newProductVal)
 
+	// Merging two slices
+
+	slice1 := []int{1,2,3,4}
+	slice2 := []int{5,6,7,8}
+
+	slice3 := append(slice1, slice2...)
+
+	fmt.Println(slice3)
 }
