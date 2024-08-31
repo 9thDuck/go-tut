@@ -1,8 +1,8 @@
 package main
 
 import (
-	utils "example.com/practice_app/read_write_to_fs"
 	"example.com/practice_app/tax"
+	utils "example.com/practice_app/utils"
 )
 
 const outputFilename = "output.json"

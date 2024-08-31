@@ -36,11 +36,11 @@ func WriteJsonToFile(data any, filename string) (err error) {
 		return err
 	}
 
+	defer file.Close()
+
 	encoder := json.NewEncoder(file)
 	encoder.SetIndent("", "  ")
 	err = encoder.Encode(data)
-
-	file.Close()
 
 	if err != nil {
 		return err
