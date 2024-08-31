@@ -26,7 +26,9 @@ func transformNumsSlice(nums *[]int, transformCb TransformCb) {
 func main() {
 	nums := []int{1, 2, 3, 4}
 
-	transformNumsSlice(&nums, getTransformerFunction())
+	transformNumsSlice(&nums, func(num int) int {
+		return num * 2
+	})
 	fmt.Println(nums)
 	transformNumsSlice(&nums, tripleNum)
 	fmt.Println(nums)
