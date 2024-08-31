@@ -12,6 +12,10 @@ func tripleNum(num int) int {
 
 type TransformCb func(int) int
 
+func getDoubleTransformerFunction() TransformCb {
+	return doubleNum
+}
+
 func transformNumsSlice(nums *[]int, transformCb TransformCb) {
 	numsVal := *nums
 	for idx := range numsVal {
@@ -22,7 +26,7 @@ func transformNumsSlice(nums *[]int, transformCb TransformCb) {
 func main() {
 	nums := []int{1, 2, 3, 4}
 
-	transformNumsSlice(&nums, doubleNum)
+	transformNumsSlice(&nums, getTransformerFunction())
 	fmt.Println(nums)
 	transformNumsSlice(&nums, tripleNum)
 	fmt.Println(nums)
