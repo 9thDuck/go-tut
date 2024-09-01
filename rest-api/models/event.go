@@ -70,8 +70,6 @@ func GetAllEvents() (*[]Event, error) {
 
 func GetEventById(id int64) (*Event, error) {
 
-	fmt.Println("GetSingleEvent id ", id)
-
 	query := `SELECT id, name, description, location, date_time, user_id from events WHERE id = ?`
 
 	row := db.Db.QueryRow(query, id)
@@ -91,4 +89,45 @@ func GetEventById(id int64) (*Event, error) {
 	}
 
 	return &event, nil
+}
+
+func (event Event) Update() error {
+	query := `UPDATE events SET name=?, description=?, location=?, date_time=?, user_id=? where id=?`
+
+	res, err := db.Db.Exec(query, event.Name, event.Description, event.Location, event.DateTime, event.UserID, event.ID)
+
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := res.RowsAffected()
+
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected != 1 {
+		return fmt.Errorf("error: Couldn't update the event with id:%v", event.ID)
+	}
+	return nil
+}
+
+func DeleteEventById(eventId int64) error {
+	query := `DELETE FROM events WHERE id=?`
+
+	res, err := db.Db.Exec(query, eventId)
+
+	if err != nil {
+		return err
+	}
+	rowsAffected, err := res.RowsAffected()
+
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected != 1 {
+		return fmt.Errorf("error: Couldn't update the event with id:%v", eventId)
+	}
+	return nil
 }
