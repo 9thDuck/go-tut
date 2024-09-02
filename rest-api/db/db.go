@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"os"
 	"strconv"
 
+	"example.com/rest-api/utils"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -38,6 +38,20 @@ func InitDb() {
 }
 
 func createTables() error {
+
+	createUsersTable := `
+	CREATE TABLE IF NOT EXISTS users (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		email TEXT NOT NULL UNIQUE,
+		password TEXT NOT NULL
+	)`
+
+	_, err := Db.Exec(createUsersTable)
+
+	if err != nil {
+		return fmt.Errorf(`error: Couldn't create users table, err: %v`, err)
+	}
+
 	createEventsTable := `
 	CREATE TABLE IF NOT EXISTS events (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -49,24 +63,12 @@ func createTables() error {
 		FOREIGN KEY(user_id) REFERENCES users(id)
 	)`
 
-	_, err := Db.Exec(createEventsTable)
+	_, err = Db.Exec(createEventsTable)
 
 	if err != nil {
 		return fmt.Errorf(`error: Couldn't create events table, err: %v`, err)
 	}
 
-	createUsersTable := `
-	CREATE TABLE IF NOT EXISTS users (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		email TEXT NOT NULL UNIQUE,
-		password TEXT NOT NULL
-	)`
-
-	_, err = Db.Exec(createUsersTable)
-
-	if err != nil {
-		return fmt.Errorf(`error: Couldn't create users table, err: %v`, err)
-	}
 	return nil
 }
 
@@ -77,22 +79,22 @@ type DbEnv struct {
 }
 
 func getDbEnv() (DbEnv, error) {
-	DB_PATH, varPresent := os.LookupEnv("DB_PATH")
+	DB_PATH, err := utils.GetEnvVariable("DB_PATH")
 
-	if !varPresent {
-		return DbEnv{}, errors.New("error: DB_PATH .env variable not found")
+	if err != nil {
+		return DbEnv{}, err
 	}
 
-	DB_MAX_OPEN_CONNS_STR, varPresent := os.LookupEnv("DB_MAX_OPEN_CONNS")
+	DB_MAX_OPEN_CONNS_STR, err := utils.GetEnvVariable("DB_MAX_OPEN_CONNS")
 
-	if !varPresent {
-		return DbEnv{}, errors.New("error: DB_MAX_OPEN_CONNS .env variable not found")
+	if err != nil {
+		return DbEnv{}, err
 	}
 
-	DB_MAX_IDLE_CONNS_STR, varPresent := os.LookupEnv("DB_MAX_IDLE_CONNS")
+	DB_MAX_IDLE_CONNS_STR, err := utils.GetEnvVariable("DB_MAX_IDLE_CONNS")
 
-	if !varPresent {
-		return DbEnv{}, errors.New("error: DB_MAX_IDLE_CONNS .env variable not found")
+	if err != nil {
+		return DbEnv{}, err
 	}
 
 	DB_MAX_OPEN_CONNS, parseIntErr := strconv.Atoi(DB_MAX_OPEN_CONNS_STR)

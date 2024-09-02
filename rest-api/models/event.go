@@ -13,7 +13,7 @@ type Event struct {
 	Description string    `binding:"required" json:"description"`
 	Location    string    `binding:"required" json:"location"`
 	DateTime    time.Time `binding:"required" json:"date_time"`
-	UserID      int       `json:"user_id"`
+	UserID      int64     `json:"user_id"`
 }
 
 func (e *Event) Save() error {
@@ -54,7 +54,7 @@ func GetAllEvents() (*[]Event, error) {
 	}
 	defer rows.Close()
 
-	var events []Event
+	var events []Event = []Event{}
 
 	for rows.Next() {
 		var event Event
@@ -69,7 +69,6 @@ func GetAllEvents() (*[]Event, error) {
 }
 
 func GetEventById(id int64) (*Event, error) {
-
 	query := `SELECT id, name, description, location, date_time, user_id from events WHERE id = ?`
 
 	row := db.Db.QueryRow(query, id)
@@ -91,10 +90,10 @@ func GetEventById(id int64) (*Event, error) {
 	return &event, nil
 }
 
-func (event Event) Update() error {
-	query := `UPDATE events SET name=?, description=?, location=?, date_time=?, user_id=? where id=?`
+func (event Event) Update(userId int64) error {
+	query := `UPDATE events SET name=?, description=?, location=?, date_time=?, user_id=? WHERE id=? AND user_id=?`
 
-	res, err := db.Db.Exec(query, event.Name, event.Description, event.Location, event.DateTime, event.UserID, event.ID)
+	res, err := db.Db.Exec(query, event.Name, event.Description, event.Location, event.DateTime, event.UserID, event.ID, userId)
 
 	if err != nil {
 		return err
@@ -112,10 +111,10 @@ func (event Event) Update() error {
 	return nil
 }
 
-func DeleteEventById(eventId int64) error {
-	query := `DELETE FROM events WHERE id=?`
+func DeleteEventById(eventId int64, userId int64) error {
+	query := `DELETE FROM events WHERE id=? AND user_id=?`
 
-	res, err := db.Db.Exec(query, eventId)
+	res, err := db.Db.Exec(query, eventId, userId)
 
 	if err != nil {
 		return err

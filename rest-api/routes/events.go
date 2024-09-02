@@ -33,8 +33,9 @@ func PostEvent(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse the request data.", "err": err, "time": time.Now()})
 		return
 	}
-	event.ID = 1
-	event.UserID = 1
+	userId := ctx.GetInt64("userId")
+	event.UserID = userId
+
 	err = event.Save()
 
 	if err != nil {
@@ -80,11 +81,13 @@ func UpdateEvent(ctx *gin.Context) {
 	event.ID = eventId
 
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse the event id"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse the event data"})
 		return
 	}
 
-	err = event.Update()
+	userId := ctx.GetInt64("userId")
+
+	err = event.Update(userId)
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Could not update the event with id:%v", eventId)})
@@ -104,7 +107,9 @@ func DeleteEvent(ctx *gin.Context) {
 		return
 	}
 
-	err = models.DeleteEventById(eventId)
+	userId := ctx.GetInt64("userId")
+
+	err = models.DeleteEventById(eventId, userId)
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Could not delete the event by id:%v", eventId)})
